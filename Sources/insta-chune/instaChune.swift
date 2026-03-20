@@ -2,18 +2,17 @@ import Foundation
 
 @main
 struct instaChune {
-    static var contentsOfFile: [String] {
-        get throws {
-            guard let themes = Bundle.module.url(forResource: "themes", withExtension: "txt") else {
-                preconditionFailure("themes file not present")
-            }
-            
-            return try String(contentsOf: themes, encoding: .utf8)
-                .components(separatedBy: "\n")
+    static func main() async throws {
+        let (data, _) = try await URLSession
+            .shared
+            .data(from: URL(string: "https://random-word-api.herokuapp.com/word")!)
+        guard let string = String(data: data, encoding: .utf8) else {
+            preconditionFailure()
         }
-    }
-    
-    static func main() throws {
-        print(try contentsOfFile)
+        let newStr = string
+            .replacingOccurrences(of: "[", with: String())
+            .replacingOccurrences(of: "]", with: "")
+            .replacingOccurrences(of: #"""#, with: "")
+        print(newStr.capitalized)
     }
 }
